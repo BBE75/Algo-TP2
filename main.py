@@ -1,6 +1,26 @@
 import time
 
 
+def quick_sort(tab, min, max, valeur, verbose, cpt):
+    start_time = time.time()
+    print('--début du tri sélection--')
+
+    length = max - min
+    pivot = int(min + length / 2)
+    cpt += 1
+    if verbose == 1:
+        print('Longueur :', int(length))
+        print('min: ', min, 'max: ', max, 'valeur: ', valeur, 'pivot: ', pivot)
+
+    for i in range(0, pivot):
+        if tab[i] < tab [pivot]:
+            print('')
+
+
+    print('--fin du tri sélection--')
+    print("Execution time : %s seconds" % (time.time() - start_time))
+
+
 def sequential_search(tab, valeur, tab_length):
     i = 0
     while tab[i] !=  valeur and i < tab_length:
@@ -37,6 +57,21 @@ def select_sort_tab(tab, tab_length, verbose):
     print('--fin du tri sélection--')
     print("Execution time : %s seconds" % (time.time() - start_time))
 
+def insert_sort(tab, tab_length, verbose):
+    start_time = time.time()
+    print('--début du tri sélection--')
+    for i in range(1, tab_length-1):
+        if tab[i] > tab[i+1]:
+            for j in range(0, i+1):
+                if tab[j] > tab[i+1]:
+                    tmp = tab[j]
+                    tab[j] = tab[i+1]
+                    tab[i+1]= tmp
+        if verbose == 1:
+            print_tab(tab, tab_length)
+
+    print('--fin du tri sélection--')
+    print("Execution time : %s seconds" % (time.time() - start_time))
 
 def dichotomy(tab, min, max, valeur, verbose, cpt):
     length = max - min
@@ -71,10 +106,13 @@ def dichotomy(tab, min, max, valeur, verbose, cpt):
 
 tab = [37, 10, 8, 29, 97, 4, 11, 76, 55, 34]
 select_tab = list(tab)
+insert_tab = list(tab)
 print('Affichage du tableau avant tri: ', end='')
 print_tab(select_tab, len(select_tab))
 select_sort_tab(select_tab, len(select_tab), 0)
 print('Affichage du tableau après tri: ', end='')
 print_tab(select_tab, len(select_tab))
+insert_sort(insert_tab, len(insert_tab), 1)
+print_tab(insert_tab, len(insert_tab))
 sequential_search(select_tab, 55, len(select_tab))
 dichotomy(select_tab, 0, len(select_tab)-1, 55, 0, 0)
