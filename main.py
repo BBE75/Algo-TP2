@@ -1,34 +1,53 @@
 import time
+from random import randint
 
 
-def quick_sort(tab, min, max, valeur, verbose, cpt):
+def q_sort(tab, min, max, cpt):
+    if min < max:
+        cpt += 1
+
+        j = min
+        for i in range(min, max + 1):
+            if tab[i] < tab[max]:
+                if i != j:
+                    tmp = tab[i]
+                    tab[i] = tab[j]
+                    tab[j] = tmp
+                j += 1
+        tmp = tab[j]
+        tab[j] = tab[max]
+        tab[max] = tmp
+    if min < max:
+        q_sort(tab, min, j - 1, cpt)
+        q_sort(tab, j + 1, max, cpt)
+
+
+def quick_sort(tab, min, max, cpt, verbose):
+
     start_time = time.time()
     print('--début du tri sélection--')
-
-    length = max - min
-    pivot = int(min + length / 2)
-    cpt += 1
     if verbose == 1:
-        print('Longueur :', int(length))
-        print('min: ', min, 'max: ', max, 'valeur: ', valeur, 'pivot: ', pivot)
+        print_tab(tab, max)
 
-    for i in range(0, pivot):
-        if tab[i] < tab [pivot]:
-            print('')
+    q_sort(tab, min, max, cpt)
 
-
-    print('--fin du tri sélection--')
+    print('--fin du tri rapide--')
+    if verbose == 1:
+        print_tab(tab, max)
     print("Execution time : %s seconds" % (time.time() - start_time))
 
 
 def sequential_search(tab, valeur, tab_length):
+
+    print('--Recherche sequentiel--')
     i = 0
-    while tab[i] !=  valeur and i < tab_length:
-        i +=1
+
+    while tab[i] != valeur and i < tab_length:
+        i += 1
     if tab[i] == valeur:
-        print('Valeur: ', valeur,' trouvée après ', i+1, ' comparaisons')
+        print('Valeur: ', valeur, ' trouvée après ', i+1, ' comparaisons à l\'indice ', i)
     else:
-        print('Valeur non présente')
+        print('Valeur ', valeur, 'non présente dans le tableau')
 
 
 def print_tab(tab, tab_length):
@@ -42,6 +61,8 @@ def print_tab(tab, tab_length):
 def select_sort_tab(tab, tab_length, verbose):
     start_time = time.time()
     print('--début du tri sélection--')
+    if verbose == 1:
+        print_tab(tab, tab_length)
     for j in range(0, tab_length):
         min = tab[j]
         index_min = j
@@ -52,14 +73,19 @@ def select_sort_tab(tab, tab_length, verbose):
         tmp = tab[j]
         tab[j] = tab[index_min]
         tab[index_min] = tmp
-        if verbose == 1:
-            print_tab(tab, tab_length)
+
     print('--fin du tri sélection--')
+    if verbose == 1:
+        print_tab(tab, tab_length)
     print("Execution time : %s seconds" % (time.time() - start_time))
+
 
 def insert_sort(tab, tab_length, verbose):
     start_time = time.time()
-    print('--début du tri sélection--')
+    print('--début du tri par insertion--')
+    if verbose == 1:
+        print_tab(tab, tab_length)
+
     for i in range(1, tab_length-1):
         if tab[i] > tab[i+1]:
             for j in range(0, i+1):
@@ -67,52 +93,52 @@ def insert_sort(tab, tab_length, verbose):
                     tmp = tab[j]
                     tab[j] = tab[i+1]
                     tab[i+1]= tmp
-        if verbose == 1:
-            print_tab(tab, tab_length)
-
-    print('--fin du tri sélection--')
+    print('--fin du tri par insertion--')
+    if verbose == 1:
+        print_tab(tab, tab_length)
     print("Execution time : %s seconds" % (time.time() - start_time))
 
-def dichotomy(tab, min, max, valeur, verbose, cpt):
+
+def dichotomy_search(tab, min, max, valeur, cpt):
+    if cpt == 0:
+        print('--Recherche dychotomique--')
     length = max - min
     cpt += 1
-    if verbose == 1:
-        print('Longueur :', int(length))
-        print('min: ', min, 'max: ', max, 'valeur: ', valeur, 'pivot: ', int(min+length/2))
 
     if tab[int(min+length/2)] == valeur:
-        print('Valeur:', valeur, 'présente à l\'indice: ', int(min+length/2), 'trouvée après', cpt, ' comparaisons')
+        print('Valeur:', valeur, 'présente à l\'indice: ', int(min+length/2), 'trouvée après', cpt, ' divisions')
         return int(min+length/2)
     elif tab[min] == valeur:
-        print('Valeur:', valeur, 'présente à l\'indice: ', min, 'trouvée après', cpt, ' comparaisons')
+        print('Valeur:', valeur, 'présente à l\'indice: ', min, 'trouvée après', cpt, ' divisions')
         return min
     elif tab[max] == valeur:
-        print('Valeur:', valeur, 'présente à l\'indice: ', max, 'trouvée après', cpt, 'comparaisons')
+        print('Valeur:', valeur, 'présente à l\'indice: ', max, 'trouvée après', cpt, ' divisions')
         return max
     elif tab[int(min+length/2)] < valeur and length > 1:
         new_min = int(min+length/2)
-        dichotomy(tab, new_min, max, valeur, verbose, cpt)
+        dichotomy_search(tab, new_min, max, valeur, cpt)
     elif tab[int(min+length/2)] > valeur and length > 1:
         new_max = int(min+length/2)
-        dichotomy(tab, min, new_max, valeur, verbose, cpt)
+        dichotomy_search(tab, min, new_max, valeur, cpt)
     else:
-        print('Valeur non présente dans le tableau')
+        print('Valeur ', valeur, 'non présente dans le tableau')
         return -1
 
 
-#for i in range(0, 10):
-#     saisie = int(input('Saisir un entier'))
-#     tab.append(saisie)
+# Génération d'un tableau de 10000 éléments avec valeurs comprisent entre 0 et 100
+tab = []
+for i in range(0, 10000):
+    tab.append(randint(0, 101))
 
-tab = [37, 10, 8, 29, 97, 4, 11, 76, 55, 34]
+# 1 pour afficher les tableaux non triés puis triés
+verbose = 0
 select_tab = list(tab)
 insert_tab = list(tab)
-print('Affichage du tableau avant tri: ', end='')
-print_tab(select_tab, len(select_tab))
-select_sort_tab(select_tab, len(select_tab), 0)
-print('Affichage du tableau après tri: ', end='')
-print_tab(select_tab, len(select_tab))
-insert_sort(insert_tab, len(insert_tab), 1)
-print_tab(insert_tab, len(insert_tab))
-sequential_search(select_tab, 55, len(select_tab))
-dichotomy(select_tab, 0, len(select_tab)-1, 55, 0, 0)
+quick_tab = list(tab)
+
+select_sort_tab(select_tab, len(select_tab), verbose)
+insert_sort(insert_tab, len(insert_tab), verbose)
+quick_sort(quick_tab, 0, len(quick_tab)-1, 0, verbose)
+sequential_search(select_tab, 55, len(select_tab)-1)
+dichotomy_search(select_tab, 0, len(select_tab)-1, 55, 0)
+
